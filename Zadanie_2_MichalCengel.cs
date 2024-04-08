@@ -135,8 +135,17 @@ namespace Zadanie_2_MichalCengel
                 }
                 Console.WriteLine();
             }
-            Console.WriteLine("Suma hlavnej diagonály:" + HlavnaDiagonalaSuma());
-            Console.WriteLine("Suma vedľajšej diagonály:" + VedlajsiaDiagonalaSuma());
+            long sumaHlDiag = HlavnaDiagonalaSuma();
+            long sumaVedDiag = VedlajsiaDiagonalaSuma();
+            Console.WriteLine("Suma hlavnej diagonály:" + sumaHlDiag);
+            Console.WriteLine("Suma vedľajšej diagonály:" + sumaVedDiag);
+            Console.WriteLine();
+            if (sumaHlDiag > sumaVedDiag)
+                Console.WriteLine("Suma hlavnej diagonály je väčšia ako suma vedľajšej diagonály.");
+            else if (sumaHlDiag < sumaVedDiag)
+                Console.WriteLine("Suma vedľajšej diagonály je väčšia ako suma hlavne diagonály.");
+            else
+                Console.WriteLine("Suma hlavnej diagonály sa rovná sume vedľajšej diagonály.");
         }
     }
     internal class Zadanie_2_MichalCengel
@@ -144,9 +153,7 @@ namespace Zadanie_2_MichalCengel
         static void Main(string[] args)
         {
             Matica mat = new Matica();
-
             mat.Vypis();
-
             Console.ReadKey();
         }
     }

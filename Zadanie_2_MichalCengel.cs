@@ -62,7 +62,7 @@ namespace Zadanie_2_MichalCengel
             Console.WriteLine("Suma vedľajšej diagonály:" + VedlajsiaDiagonalaSuma());
         }
     }
-    internal class Zadanie_2_MC
+    internal class Zadanie_2_MichalCengel
     {
         static void Main(string[] args)
         {

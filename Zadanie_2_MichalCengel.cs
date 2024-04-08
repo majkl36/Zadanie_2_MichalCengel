@@ -2,30 +2,107 @@
 
 namespace Zadanie_2_MichalCengel
 {
+    public class NespravnyVstupException : Exception
+    {
+        public NespravnyVstupException() : base() { }
+        public NespravnyVstupException(string message) : base(message) { }
+        public NespravnyVstupException(string message, Exception innerException) : base(message, innerException) { }
+    }
     public class Matica
     {
         public const uint MAX_ROZMER = 10;
         private int[,] data;
-        public Matica(uint size = MAX_ROZMER)
+
+        private uint velkostMatice;
+        private int minCisloMatice = 0, maxCisloMatice = 10; //Predvolené hodnoty čísel v matici
+        public Matica()
         {
-            this.data = new int[size, size];
-            NaplnMaticu();
+            NacitajVstup();
+            this.data = new int[velkostMatice, velkostMatice];
+            NaplnMaticu(minCisloMatice, maxCisloMatice);
         }
-        public Matica(uint size, int min, int max)
+        private void NacitajVstup()
         {
-            this.data = new int[size, size];
-            NaplnMaticu(min, max);
+            while (true)
+            {
+                Console.Write("Zadajte veľkosť n generovanej matice n*n (od 1 do 10): ");
+                try
+                {
+                    if (!uint.TryParse(Console.ReadLine(), out velkostMatice))
+                        throw new NespravnyVstupException("Nesprávny formát zadávaného čísla!");
+                    if (!(0 < velkostMatice && velkostMatice <= MAX_ROZMER))
+                        throw new NespravnyVstupException("Zadané číslo nie je z povoleného rozsahu!");
+                }
+                catch (NespravnyVstupException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    continue;
+                }
+                break;
+            }
+            string odpoved;
+            while (true)
+            {
+                Console.Write("Predvolené rozsah čísel v matici je od 0 do 10, želáte si to zmeniť? (áno/nie) : ");
+                try
+                {
+                    odpoved = Console.ReadLine();
+                    odpoved = odpoved.ToLower();
+                    if (!(odpoved.Equals("áno") || odpoved.Equals("nie")))
+                        throw new NespravnyVstupException("Odpoveď nerozpoznaná.");
+                }
+                catch (NespravnyVstupException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    continue;
+                }
+                break;
+            }
+            while (odpoved.Equals("áno"))
+            {
+                Console.Write("Zadajte spodnú inkluzívnu hranicu (od {0} do {1}: ", int.MinValue, int.MaxValue);
+                try
+                {
+                    if (!int.TryParse(Console.ReadLine(), out minCisloMatice))
+                        throw new NespravnyVstupException("Nesprávny formát zadávaného čísla!");
+                    if (!(int.MinValue <= minCisloMatice && minCisloMatice <= int.MaxValue))
+                        throw new NespravnyVstupException("Zadané číslo nie je z povoleného rozsahu!");
+                }
+                catch (NespravnyVstupException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    continue;
+                }
+                break;
+            }
+            while (odpoved.Equals("áno"))
+            {
+                Console.Write("Zadajte hornú inkluzívnu hranicu (od {0} do {1}: ", minCisloMatice, int.MaxValue);
+                try
+                {
+                    if (!int.TryParse(Console.ReadLine(), out maxCisloMatice))
+                        throw new NespravnyVstupException("Nesprávny formát zadávaného čísla!");
+                    if (!(minCisloMatice <= maxCisloMatice && maxCisloMatice <= int.MaxValue))
+                        throw new NespravnyVstupException("Zadané číslo nie je z povoleného rozsahu!");
+                }
+                catch (NespravnyVstupException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    continue;
+                }
+                break;
+            }
         }
-        private void NaplnMaticu(int min = 0, int max = 10)
+        private void NaplnMaticu(int min, int max)
         {
             Random rand = new Random();
             for (int i = 0; i < this.data.GetLength(0); i++)
                 for (int j = 0; j < this.data.GetLength(1); j++)
                     data[i, j] = rand.Next(min, max);
         }
-        private int HlavnaDiagonalaSuma()
+        private long HlavnaDiagonalaSuma()
         {
-            int suma = 0;
+            long suma = 0;
             for (int i = 0; i < this.data.GetLength(0); i++)
                 suma += this.data[i, i];
             return suma;
@@ -39,13 +116,13 @@ namespace Zadanie_2_MichalCengel
                     rotovanaMatica[j, n - 1 - i] = aMatica[i, j];
             return rotovanaMatica;
         }
-        private int VedlajsiaDiagonalaSuma()
+        private long VedlajsiaDiagonalaSuma()
         {
-            int suma = 0;
+            long suma = 0;
             int[,] data = RotaciaMatice(this.data);
             for (int i = 0; i < data.GetLength(0); i++)
                 suma += data[i, i];
-            return 0;
+            return suma;
         }
         public void Vypis()
         {
@@ -66,12 +143,9 @@ namespace Zadanie_2_MichalCengel
     {
         static void Main(string[] args)
         {
-            Matica xxx = new Matica(3);
+            Matica mat = new Matica();
 
-            
-            xxx.Vypis();
-
-            Console.WriteLine("Vygenerovaná matica:");
+            mat.Vypis();
 
             Console.ReadKey();
         }
